@@ -14,7 +14,7 @@ const LoginPage = () => {
     e.preventDefault();
     try{
       const res = await axios.post(
-      "http://localhost:3000/login",
+      "https://talkio-1.onrender.com/login",
       {username , password},
       {withCredentials : true}
       )

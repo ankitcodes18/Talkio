@@ -16,7 +16,7 @@ const ChatPage = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    socket.current = io("http://localhost:3000");
+    socket.current = io("https://talkio-1.onrender.com");
 
     socket.current.on("connect", () => {
       socket.current.emit("setUserOnline", user);
@@ -35,7 +35,7 @@ const ChatPage = () => {
       async function fetchMessages() {
         try {
           const { data } = await axios.get(
-            `http://localhost:3000/getallmessages/${user.username}/${selectedUser}`
+            `https://talkio-1.onrender.com/getallmessages/${user.username}/${selectedUser}`
           );
           setMessages(
             data.map((msg) => ({
@@ -63,7 +63,7 @@ const ChatPage = () => {
   };
 
   const handleLogout = async () => {
-    await axios.get('http://localhost:3000/logout', { withCredentials: true });
+    await axios.get('https://talkio-1.onrender.com/logout', { withCredentials: true });
     navigate("/login");
   };
 

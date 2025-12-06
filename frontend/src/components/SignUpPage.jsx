@@ -18,7 +18,7 @@ const SignUpPage = () => {
 
   try {
     const res = await axios.post(
-      "http://localhost:3000/signup",
+      "https://talkio-1.onrender.com/signup",
       { username, password },
       { withCredentials: true }
     );
