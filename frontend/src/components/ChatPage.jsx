@@ -70,7 +70,7 @@ const ChatPage = () => {
 
     try {
       const { data } = await axios.post(
-        `https://talkio-1.onrender.com/getallmessages/${user.username}/${selectedUser}`,
+        `https://talkio-1.onrender.com/savemessage/${user.username}/${selectedUser}`,
         formData,
         {
           withCredentials: true,
