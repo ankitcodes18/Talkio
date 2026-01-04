@@ -57,17 +57,46 @@ const ChatPage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
-    if (input.trim() === "" && file.empty()) return;
-    socket.current.emit("sendmessage", {
-      from: user.username,
-      to: selectedUser,
-      message: input,
-    });
-    const fileUrl = URL.createObjectURL(file);
-    setMessages([...messages, { text: input, media: fileUrl, sender: "me" }]);
-    setInput("");
+
+    if (input.trim() === "" && !file) return;
+
+    const formData = new FormData();
+    formData.append("text", input);
+    if (file) {
+      formData.append("image", file);
+    }
+
+    try {
+      const { data } = await axios.post(
+        `https://talkio-1.onrender.com/getallmessages/${user.username}/${selectedUser}`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      socket.current.emit("sendmessage", {
+        from: user.username,
+        to: selectedUser,
+        message: input,
+        media: data.media,
+      });
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: input,
+          media: file ? data.media : "",
+          sender: "me",
+        },
+      ]);
+
+      setInput("");
+    } catch (error) {
+      console.error("Message send failed:", error);
+    }
   };
 
   const handleLogout = async () => {
@@ -218,6 +247,7 @@ const ChatPage = () => {
                 <input
                   id="file"
                   type="file"
+                  name="image"
                   className="hidden"
                   onChange={(e) => setFile(e.target.files[0])}
                 />
@@ -226,6 +256,7 @@ const ChatPage = () => {
                 <input
                   type="text"
                   placeholder="Type a message..."
+                  name="input"
                   className="flex-1 px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white/80"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}

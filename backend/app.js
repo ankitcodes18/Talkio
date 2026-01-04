@@ -51,6 +51,7 @@ app.use('/signup' , signupRouter);
 app.use('/login' , loginRouter);
 app.use('/getallmessages' , getmessageRouter);
 app.use('/getallusers' , getallusersRouter);
+app.use('/savemessage' , savemessageRouter);
 const onlineusers = {};
 
 async function fetchUsers(){
@@ -85,11 +86,11 @@ io.on("connection" , (uniquesocket)=>{
   uniquesocket.on('sendmessage' ,async (data)=>{
 
     try{
-      let chat = await chatModel.create({from : data.from , to: data.to , text:data.message});
+      
       console.log('sendmessage ke andr hu');
       
       console.log(onlineusers[data.to])
-      io.to(onlineusers[data.to]).emit('receivemessage' , {text:data.message , sender:'other'});
+      io.to(onlineusers[data.to]).emit('receivemessage' , {text:data.message ,media:data.media sender:'other'});
       console.log('emit ho gya')
 
     }
