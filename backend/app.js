@@ -11,6 +11,7 @@ const signupRouter = require('./routes/signupRouter')
 const loginRouter = require('./routes/loginRouter')
 const getmessageRouter = require('./routes/getmessagesRouter')
 const getallusersRouter = require('./routes/getallusersRouter')
+const savemessageRouter = require('./routes/savemessageRouter')
 const userModel = require('./models/user-model');
 const chatModel = require('./models/message-model');
 const server = http.createServer(app);
@@ -90,7 +91,7 @@ io.on("connection" , (uniquesocket)=>{
       console.log('sendmessage ke andr hu');
       
       console.log(onlineusers[data.to])
-      io.to(onlineusers[data.to]).emit('receivemessage' , {text:data.message ,media:data.media sender:'other'});
+      io.to(onlineusers[data.to]).emit('receivemessage' , {text:data.message ,media:data.media, sender:'other'});
       console.log('emit ho gya')
 
     }
