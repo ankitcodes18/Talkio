@@ -94,6 +94,7 @@ const ChatPage = () => {
       ]);
 
       setInput("");
+      setFile(null);
     } catch (error) {
       console.error("Message send failed:", error);
     }
@@ -213,6 +214,7 @@ const ChatPage = () => {
                       <img
                         src={msg.media}
                         alt="attachment"
+                        onClick={() => window.open(msg.media, "_blank")}
                         className="mb-2 rounded-lg max-h-60 w-full object-cover"
                       />
                     )}
@@ -230,48 +232,81 @@ const ChatPage = () => {
 
             {/* Input box */}
             <form
-              onSubmit={handleSend}
-              encType="multipart/form-data"
-              className="sticky bottom-0"
-            >
-              <div className="flex items-center gap-2 p-4 shadow-md bg-gradient-to-br from-purple-600 via-pink-500 to-red-500">
-                {/* File input (hidden) */}
-                <label
-                  htmlFor="file"
-                  className="cursor-pointer bg-white/20 hover:bg-white/30 p-3 rounded-full text-white flex items-center justify-center"
-                  title="Attach file"
-                >
-                  📎
-                </label>
+  onSubmit={handleSend}
+  encType="multipart/form-data"
+  className="sticky bottom-0 w-full"
+>
+  {/* File preview bar */}
+  {file && (
+    <div className="flex items-center justify-between px-4 py-2 bg-gradient-to-r from-purple-700 to-pink-600 text-white text-sm">
+      <div className="flex items-center gap-2 truncate">
+        <span className="bg-white/20 p-1.5 rounded-full">📎</span>
+        <span className="truncate max-w-[220px]">{file.name}</span>
+      </div>
 
-                <input
-                  id="file"
-                  type="file"
-                  name="image"
-                  className="hidden"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
+      <button
+        type="button"
+        onClick={() => {
+          setFile(null);
+        }}
+        className="text-white/80 hover:text-red-300 transition"
+        title="Remove file"
+      >
+        ✕
+      </button>
+    </div>
+  )}
 
-                {/* Text input */}
-                <input
-                  type="text"
-                  placeholder="Type a message..."
-                  name="input"
-                  className="flex-1 px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white/80"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                />
+  {/* Input row */}
+  <div className="flex items-center gap-3 px-4 py-3 shadow-xl bg-gradient-to-br from-purple-600 via-pink-500 to-red-500">
+    
+    {/* Attach */}
+    <label
+      htmlFor="file"
+      title="Attach file"
+      className={`flex items-center justify-center w-11 h-11 rounded-full cursor-pointer transition
+      ${file 
+        ? "bg-green-500 shadow-lg scale-105" 
+        : "bg-white/20 hover:bg-white/30"
+      }`}
+    >
+      📎
+    </label>
 
-                {/* Send button */}
-                <button
-                  type="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-md flex items-center justify-center"
-                  title="Send message"
-                >
-                  🚀
-                </button>
-              </div>
-            </form>
+    <input
+      id="file"
+      type="file"
+      name="image"
+      className="hidden"
+      onChange={(e) => setFile(e.target.files[0])}
+    />
+
+    {/* Text input */}
+    <input
+      type="text"
+      placeholder="Type a message..."
+      name="input"
+      className="flex-1 px-5 py-2.5 rounded-full bg-white/90 text-gray-800
+      focus:outline-none focus:ring-2 focus:ring-pink-400
+      placeholder-gray-500"
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+    />
+
+    {/* Send */}
+    <button
+      type="submit"
+      title="Send message"
+      className="flex items-center justify-center w-11 h-11 rounded-full
+      bg-green-500 hover:bg-green-600 active:scale-95 transition
+      text-white shadow-lg"
+    >
+      🚀
+    </button>
+  </div>
+</form>
+
+
           </div>
         )}
       </div>
